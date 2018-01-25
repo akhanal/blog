@@ -1,0 +1,26 @@
+----lets encrypt----
+This directory contains your keys and certificates.
+
+`privkey.pem`  : the private key for your certificate.
+`fullchain.pem`: the certificate file used in most server software.
+`chain.pem`    : used for OCSP stapling in Nginx >=1.3.7.
+`cert.pem`     : will break many server configurations, and should not be used
+                 without reading further documentation (see link below).
+
+We recommend not moving these files. For more information, see the Certbot
+User Guide at https://certbot.eff.org/docs/using.html#where-are-my-certificates.
+
+
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name blog -CAfile chain.pem -caname root
+
+-----local self signed----
+
+openssl genrsa -out www.ankitkhanaldemo.com.key 2048
+
+openssl req -new -x509 -key www.ankitkhanaldemo.com.key -out www.ankitkhanaldemo.com.cert -days 3650 -subj /CN=www
+.ankitkhanaldemo.com
+
+openssl pkcs12 -export -in www.ankitkhanaldemo.com.cert -inkey www.ankitkhanaldemo.com.key -out keystore.p12 -name blog -CAfile chain.pem -caname root
+
+---------------
+sudo mvn clean package docker:build
